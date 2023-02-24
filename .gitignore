@@ -1,0 +1,4 @@
+/node_modules
+/cert/*.pem
+/cert/*.der
+/static/favicon.ico
