@@ -5,9 +5,10 @@ Currently (ab)using my own static files taken from packet captures.
 Right now, the only thing this code does is allow a person into the game (using my account and data), and then immediately softlocks. It'll be a while before it's even close to remotely functional.
 
 ### How to Use, if you're crazy enough to do that
-Download [Node](https://nodejs.org/en/download/)
-Run `npm install`, and then `npm start`
-If you see "Stardust, Online". Congratulations! You started the server.
+- Download [Node](https://nodejs.org/en/download/)
+- Run `npm install`, and then `npm start`
+- If you see "Stardust, Online". Congratulations! You started the server.
+
 
 However, that's not all. In order to actually use the server, you'll need to create SSL certificates, or remove them.
 Removing them from the code is simple:
