@@ -388,11 +388,9 @@ Stardust.get("/player/downloadAvatarIcon", errorhandler(async (req, res) => {
 
 Stardust.post("/loginbonus/getLoginBonus", errorhandler(async (req, res) => {
 	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
-		"eventBonus": {
-			"eventBonusInfo": [],
-		},
+		"eventBonus": StaticData.EventLoginBonus,
 		"presentCnt": 0,
-		"loginBonus": {},
+		"loginBonus": StaticData.LoginBonus,
 		"totalDay": 0
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -586,7 +584,7 @@ Stardust.post("/achievement/getAchievement", errorhandler(async (req, res) => {
 
 Stardust.post("/notice/getNoticeList", errorhandler(async (req, res) => {
 	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
-		"noticeList": []
+		"noticeList": StaticData.NoticeList
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
 	res.set(ResHeaders());
@@ -637,17 +635,9 @@ Stardust.post("/event/eventQuestList", errorhandler(async (req, res) => {
 }));
 Stardust.post("/villagemultiplay/getMultiQuestData", errorhandler(async (req, res) => {
 	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
-		"eventQuestList": {
-			"questList": []
-		},
-		"getCampaignList": {
-			"advQuestGroupList": []
-		},
-		"getAdvQuestList": {
-			"feverAdvQuestGroupList": [],
-			"advQuestHistList": [],
-			"clearAdvQuestIdList": []
-		}
+		"eventQuestList": StaticData.EventQuestList,
+		"getCampaignList": StaticData.CampaignList,
+		"getAdvQuestList": StaticData.AdventureList
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
 	res.set(ResHeaders());
