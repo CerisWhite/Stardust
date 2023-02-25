@@ -565,7 +565,6 @@ Stardust.post("/license/getLifeAltar", errorhandler(async (req, res) => {
 	res.set(ResHeaders()); res.write(Serialized); res.end();
 }));
 
-
 Stardust.post("/notice/getNoticeList", errorhandler(async (req, res) => {
 	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"noticeList": StaticData.NoticeList
@@ -576,6 +575,20 @@ Stardust.post("/notice/getNoticeList", errorhandler(async (req, res) => {
 Stardust.post("/notice/getExtNoticeList", errorhandler(async (req, res) => {
 	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"noticeList": []
+	}
+	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
+	res.set(ResHeaders()); res.write(Serialized); res.end();
+}));
+
+Stardust.post("/exchangeBoard/getExchangeBoardMissionList", errorhandler(async (req, res) => {
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
+		"date": "20230204",
+		"completeState": 0,
+		"exchangeBoardDeliveryEquipMissionList": StaticData.ExchangeBoardEquipDeliveryList,
+		"exchangeBoardTotalMissionList": [],
+		"exchangeBoardActionMissionList": [],
+		"existCompleteReward": 0,
+		"exchangeBoardDeliveryMissionList": StaticData.ExchangeBoardMissionDeliveryList
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
 	res.set(ResHeaders()); res.write(Serialized); res.end();
@@ -645,6 +658,13 @@ Stardust.post("/village/enterVillage", errorhandler(async (req, res) => {
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
 	res.set(ResHeaders()); res.write(Serialized); res.end();
 }));
+Stardust.post("/village/getVisitorList", errorhandler(async (req, res) => {
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
+		"visitorList": []
+	}
+	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
+	res.set(ResHeaders()); res.write(Serialized); res.end();
+}));
 Stardust.post("/happy/happyTaxCollect", errorhandler(async (req, res) => {
 	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"happyBoost": 1,
@@ -704,6 +724,13 @@ Stardust.post("/premiumpass/getPremiumPassList", errorhandler(async (req, res) =
 		"lifegemFree": 10000,
 		"premiumPassBuyCntList": [],
 		"premiumPassList": []
+	}
+	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
+	res.set(ResHeaders()); res.write(Serialized); res.end();
+}));
+Stardust.post("/premiumitempack/activation", errorhandler(async (req, res) => {
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
+		"premiumItemPackList":[]
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
 	res.set(ResHeaders()); res.write(Serialized); res.end();
