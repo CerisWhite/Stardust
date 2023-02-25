@@ -377,10 +377,13 @@ Stardust.get("/player/downloadAvatarIcon", errorhandler(async (req, res) => {
 
 Stardust.post("/loginbonus/getLoginBonus", errorhandler(async (req, res) => {
 	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
-		"eventBonus": StaticData.EventLoginBonus,
+		// "eventBonus": StaticData.EventLoginBonus,
+		"eventBonus": {
+			"eventBonusInfo": []
+		},
 		"presentCnt": 0,
-		"loginBonus": StaticData.LoginBonus,
-		"totalDay": 0
+		// "loginBonus": StaticData.LoginBonus,
+		"totalDay": 1
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
 	res.set(ResHeaders()); res.write(Serialized); res.end();
@@ -389,6 +392,14 @@ Stardust.post("/loginbonus/getLoginBonus", errorhandler(async (req, res) => {
 Stardust.post("/flag/getFlagListAll", errorhandler(async (req, res) => {
 	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"flagList": StaticData.FlagList
+	}
+	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
+	res.set(ResHeaders()); res.write(Serialized); res.end();
+}));
+Stardust.post("/flag/setFlagList", errorhandler(async (req, res) => {
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
+		"resultItemList": [],
+		"resultCharaList": []
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
 	res.set(ResHeaders()); res.write(Serialized); res.end();
