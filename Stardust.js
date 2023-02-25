@@ -63,6 +63,18 @@ function RecordManager (req, res, next) {
 		if (res.locals.RequestJSON['playerId'] != undefined) {
 			res.locals.UserData = ReadUserData(res.locals.RequestJSON['playerId']);
 		}
+		res.locals.ResultStatus = {
+			"resultCode": 0,
+			"textId": 500633936,
+			"reconnection": 0,
+			"resultBehavior": "Ignore"
+		}
+		res.locals.SystemStatus = {
+			"clientUpdate": 0,
+			"masterDataUpdate": 0,
+			"masterDataVersion": 557,
+			"serverDt": Math.floor(Date.now())
+		}
 	}
 	next();
 }
@@ -102,19 +114,7 @@ Stardust.get("/getStatus", errorhandler(async (req, res) => {
 
 Stardust.post("/start/start", errorhandler(async (req, res) => {
 	let OSType = {}; if (res.locals.RequestJSON['osType'] == 1) { OSType = { "IOS_REVIEW": 0 } } else { OSType = { "ANDROID_REVIEW": 0 } }
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"statusMap": OSType,
 		"bgmDataVersion": 106,
 		
@@ -133,19 +133,7 @@ Stardust.post("/start/start", errorhandler(async (req, res) => {
 }));
 Stardust.post("/start/getPlayerInfoFromGdkey", errorhandler(async (req, res) => {
 	const GameKeyList = res.locals.RequestJSON['gdkeyInfoList']
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"playerList":[
 			{
 				"gdkey": "390548548",
@@ -175,19 +163,7 @@ Stardust.post("/start/getPlayerInfoFromGdkey", errorhandler(async (req, res) => 
 }));
 Stardust.post("/start/loginWithGdkey", errorhandler(async (req, res) => {
 	const GameKeyList = res.locals.RequestJSON['gdkeyInfoList']
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"accumulatePayGem": 0,
 		"l5idMaxStatusCode": 1,
 		"enableForceDl": 0,
@@ -210,19 +186,7 @@ Stardust.post("/start/loginWithGdkey", errorhandler(async (req, res) => {
 }));
 
 Stardust.post("/player/getAvatarLifeEquipment", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"lifeEquipList": [
 			{
 				"lifeId": 730741264,
@@ -291,19 +255,7 @@ Stardust.post("/player/getAvatarLifeEquipment", errorhandler(async (req, res) =>
     res.write(Serialized); res.end();
 }));
 Stardust.post("/player/getPlayerNoticeList", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"noticeList": [],
 		"hasHalfAnniversaryReward": 0,
 		"dailyAchievementRemain": 1,
@@ -352,19 +304,7 @@ Stardust.post("/player/getPlayerNoticeList", errorhandler(async (req, res) => {
     res.write(Serialized); res.end();
 }));
 Stardust.post("/player/getMyPlayerData", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"partyCnt": 4,
 		"boostPower": 120,
 		"pocketCnt": 4,
@@ -455,19 +395,7 @@ Stardust.post("/player/getPlayerItemListBinary", errorhandler(async (req, res) =
     res.write(EncData); res.end();
 }));
 Stardust.post("/player/getPlayerCharacter", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"charaList": StaticData.CharacterListStatic
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -475,19 +403,7 @@ Stardust.post("/player/getPlayerCharacter", errorhandler(async (req, res) => {
     res.write(Serialized); res.end();
 }));
 Stardust.post("/player/getPlayerVillage", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"villageList": StaticData.VillageListStatic,
 		"waitKigurumiNum": 4,
 		"autoSyntheticList": [],
@@ -506,19 +422,7 @@ Stardust.post("/player/getPlayerVillage", errorhandler(async (req, res) => {
     res.write(Serialized); res.end();
 }));
 Stardust.post("/player/getPlayerMyHouse", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"myHouseList": [
 			{
 				"charaList": [ 3250379887 ],
@@ -544,19 +448,7 @@ Stardust.get("/player/downloadAvatarIcon", errorhandler(async (req, res) => {
 }));
 
 Stardust.post("/loginbonus/getLoginBonus", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"eventBonus": {
 			"eventBonusInfo": [],
 		},
@@ -570,19 +462,7 @@ Stardust.post("/loginbonus/getLoginBonus", errorhandler(async (req, res) => {
 }));
 
 Stardust.post("/flag/getFlagListAll", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	cconst ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"flagList": [
 			1414655077,4002759918,2610466999,247817791,4041446531,3787371202,2940086564,1052566351,2327106382,2518904968,580512558,3474003201,135177626,961499014,3113450695,1069051676,251233536,3488066081,874382461,90173025,358355989,283922413,565028337,4218030187,3391873655,1128657269,1912871785,1367807473,1623654381,2159792811,2985965751,2069141223,2464950818,2746073150,1116867582,1943265762,1962788886,1169957386,3273107258,400213530,3300807743,2199793391,3195930463,207543119,826209023,3383637582,4107149310,847425066,266504090,1212349770,1965217018,3338799338,4200735066,1066585179,2306274612,1100380740,2096518132,104202388,3104227061,2135559969,1110058641,92953665,954889713,2328537569,3238514811,3329422665,1938353136,3754347575,2228378589,3163224120,644435543,3717238754,249290470,2234831750,962099933,309635939,4133955809,3375716076,522459688,2783713943,3260271034,117612294,3807723676,2349182466,2384322794,3496107193,4256145949,1688662951,329368369,2378520210,34053259,3016078569,808264451,705921661,856208188,405135615,20894142,1316964217,1466201656,2085168635,1699878074,3804891253,1915413822,48277921,701364834,819383075,1136852899,956980010,2761400853,2675789982,957463598,537562479,187162284,305983469,1568504106,1147553899,1867193256,1984965353,4056430118,1630067565,300062706,986694705,601159024,1354809840,705193337,3080035398,2629357445,2242117316,4139240004,2357161677,1915921096,1238913091,2600290360,2212919673,2831887034,2983205883,4270951740,3884629117,3433557950,3585924863,1378140720,3267637115,2987287524,2569220135,2151154022,4079760870,2313458031,343500880,798202587,2972817756,2821367837,2198338526,2585578143,3579665496,3427167513,3882565338,4268756891,2045252436,3909680671,2579673728,3002065219,2884947970,3638617218,2720546827,1068874036,345565943,226745270,2123886390,73354175,4195518394,3510621305,3357861176,3140538808,3254285617,1550158862,2001264589,1850994316,1737457285,2413002416,2529710065,3185908786,2768121203,3955211188,4070869749,3649689910,3230853239,3622443507,2803914092,2349663919,2501261294,3858891630,2630526951,22503128,712641819,862010458,1081411802,985508947,3304087638,4279931613,3036963120,2887733361,2268201906,2653500147,3513295924,3363018101,3814639286,4198889463,3980199539,2650229484,3067746607,2948671598,3704954094,2786965607,998261080,279777947,162931674,2057443162,6992851,4264001494,3574213653,3423673684,3204786644,3318582621,1481667682,1673168617,1301022940,1419196829,2142923358,1721850655,702598616,821820569,467054426,47029787,364212127,1702830848,1314025667,1464418690,610104578,1586876811,3272091828,3894770551,4047391286,2183823030,4175616575,112137786,763512313,882472120,1200439352,1027990705,2698517902,2348109389,2465103628,2603806469,658895971,1046398242,359896801,208185248,1126773095,1513226278,1897878501,1745117860,2138870560,263643071,614173820,1031847229,1318357437,878456116,2848052235,2196539336,2616702601,3907224073,2452301440,1818684037,1196144966,1582336007,1468798990,1952687470,1836618799,1180026860,1599010477,269443178,152326443,574161640,992097193,3166318438,744145453,1552977586,2008931697,1856433200,498260144,1736080441,4209476870,3238885261,528938283,111002730,766547881,883664616,2078945327,1659961710,1239175853,1355244524,1203737192,930471671,475565364,88325237,1985448181,211758204,2432881987,3123676800,2738141121,3491791681,2867341256,1420159949,1867454790,2765219556,3184187301,2531755110,2415703335,3233620960,3651539617,4069212514,3952111651,4243095975,2351091000,2802818811,3189026746,3439369018,3083354035,710264460,24679759,409183246,297743367,385415731,2335163018,865314287,556141057,2577034596,3254353202,2034571863,959282285,2173770504,2468656358,731435907,3058690874,250842207,474358705,4168028634,768225524,550130920
 		]
@@ -593,19 +473,7 @@ Stardust.post("/flag/getFlagListAll", errorhandler(async (req, res) => {
 }));
 
 Stardust.post("/synergyBoard/getSynergyBoard", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"openBoardNo": 1,
 		"synergyBoardSlotList": []
 	}
@@ -615,19 +483,7 @@ Stardust.post("/synergyBoard/getSynergyBoard", errorhandler(async (req, res) => 
 }));
 
 Stardust.post("/collection/getCollectionMonsterInfo", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"collectionMonsterInfoList": StaticData.MonsterList
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -635,19 +491,7 @@ Stardust.post("/collection/getCollectionMonsterInfo", errorhandler(async (req, r
     res.write(Serialized); res.end();
 }));
 Stardust.post("/collection/getCollectionPickInfo", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"collectionPickInfoList": StaticData.PickList
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -655,19 +499,7 @@ Stardust.post("/collection/getCollectionPickInfo", errorhandler(async (req, res)
     res.write(Serialized); res.end();
 }));
 Stardust.post("/collection/getCollectionFishInfo", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"collectionFishInfoList": StaticData.FishList
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -675,19 +507,7 @@ Stardust.post("/collection/getCollectionFishInfo", errorhandler(async (req, res)
     res.write(Serialized); res.end();
 }));
 Stardust.post("/collection/getCollectionRecipeInfo", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"collectionRecipeInfoList": StaticData.RecipeList,
 		"collectionGodRecipeInfoList": StaticData.DivineRecipeList
 	}
@@ -697,19 +517,7 @@ Stardust.post("/collection/getCollectionRecipeInfo", errorhandler(async (req, re
 }));
 
 Stardust.post("/achievement/getAchievementCounter", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"counterList": StaticData.AchievementList,
 		"godMissionCounterList": StaticData.DivineAchievementList,
 		"godMissionThemeCounterList": []
@@ -719,19 +527,7 @@ Stardust.post("/achievement/getAchievementCounter", errorhandler(async (req, res
     res.write(Serialized); res.end();
 }));
 Stardust.post("/achievement/getGodBonusList", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"godBonusList": [
 			{
 				"stage": 2,
@@ -756,19 +552,7 @@ Stardust.post("/achievement/getGodBonusList", errorhandler(async (req, res) => {
     res.write(Serialized); res.end();
 }));
 Stardust.post("/achievement/getAchievementList", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"starReportList": StaticData.StarReportList,
 		"expertMissionList": StaticData.ExpertMissionList,
 		"godMissionThemeReportList": [],
@@ -796,19 +580,7 @@ Stardust.post("/achievement/getAchievementList", errorhandler(async (req, res) =
     res.write(Serialized); res.end();
 }));
 Stardust.post("/achievement/getAchievementMissionList", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"date": "20230204",
 		"achievementMonthlyQuest": StaticData.MonthlyMission,
 		"achievementDailyAchievementList": [],
@@ -822,13 +594,7 @@ Stardust.post("/achievement/getAchievementMissionList", errorhandler(async (req,
     res.write(Serialized); res.end();
 }));
 Stardust.post("/achievement/getAchievement", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"date": "20230204",
 		"achievementDailyAchievementList": [],
 		"achievementDailyKeyAchievementList": [],
@@ -873,8 +639,8 @@ Stardust.post("/achievement/getAchievement", errorhandler(async (req, res) => {
 			"startDt": 1675468800000,
 			"endDt": 1675555199000
 		},
-			"achievementTotalAchievementList": [],
-			"achievementTryquestAchievementList": []
+		"achievementTotalAchievementList": [],
+		"achievementTryquestAchievementList": []
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
 	res.set(ResHeaders());
@@ -882,19 +648,7 @@ Stardust.post("/achievement/getAchievement", errorhandler(async (req, res) => {
 }));
 
 Stardust.post("/notice/getNoticeList", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"noticeList": []
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -902,19 +656,7 @@ Stardust.post("/notice/getNoticeList", errorhandler(async (req, res) => {
     res.write(Serialized); res.end();
 }));
 Stardust.post("/notice/getExtNoticeList", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"noticeList": []
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -923,19 +665,7 @@ Stardust.post("/notice/getExtNoticeList", errorhandler(async (req, res) => {
 }));
 
 Stardust.post("/teamEventRanking/getOpenStatus", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"status": 0
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -943,19 +673,7 @@ Stardust.post("/teamEventRanking/getOpenStatus", errorhandler(async (req, res) =
     res.write(Serialized); res.end();
 }));
 Stardust.post("/teamEventRanking/getSchedule", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"seasonId": 0
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -964,19 +682,7 @@ Stardust.post("/teamEventRanking/getSchedule", errorhandler(async (req, res) => 
 }));
 
 Stardust.post("/adventure/saveIs", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"isData": 0
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -985,19 +691,7 @@ Stardust.post("/adventure/saveIs", errorhandler(async (req, res) => {
 }));
 
 Stardust.post("/event/eventQuestList", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"questList": []
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
@@ -1005,19 +699,7 @@ Stardust.post("/event/eventQuestList", errorhandler(async (req, res) => {
     res.write(Serialized); res.end();
 }));
 Stardust.post("/villagemultiplay/getMultiQuestData", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"eventQuestList": {
 			"questList": []
 		},
@@ -1035,19 +717,7 @@ Stardust.post("/villagemultiplay/getMultiQuestData", errorhandler(async (req, re
     res.write(Serialized); res.end();
 }));
 Stardust.post("/villagemultiplay/getRecallMultiQuestData", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"eventGroupList": [],
 		"eventQuestList": {},
 		"getCampaignList": {},
@@ -1059,19 +729,7 @@ Stardust.post("/villagemultiplay/getRecallMultiQuestData", errorhandler(async (r
 }));
 
 Stardust.post("/payment/getProductItemList", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"isAgeVerify": 1,
 		"productItemList": [],
 		"monthlyLimit": -1,
@@ -1083,19 +741,7 @@ Stardust.post("/payment/getProductItemList", errorhandler(async (req, res) => {
     res.write(Serialized); res.end();
 }));
 Stardust.post("/premiumpass/getPremiumPassList", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"storePremiumPassList":[],
 		"lifegemPay": 0,
 		"premiumPassCanNotBuyList": [],
@@ -1108,19 +754,7 @@ Stardust.post("/premiumpass/getPremiumPassList", errorhandler(async (req, res) =
     res.write(Serialized); res.end();
 }));
 Stardust.post("/shop/getItemGodList", errorhandler(async (req, res) => {
-	const ResponseData = {
-		"resultCodeStatus": {
-			"resultCode": 0,
-			"textId": 500633936,
-			"reconnection": 0,
-			"resultBehavior": "Ignore"
-		},
-		"systemStatus": {
-			"clientUpdate": 0,
-			"masterDataUpdate": 0,
-			"masterDataVersion": 557,
-			"serverDt": Math.floor(Date.now())
-		},
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"godItemList":[],
 		"lifegemPay": 0,
 		"lifegemFree": 10000,
