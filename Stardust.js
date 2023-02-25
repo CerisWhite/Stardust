@@ -704,12 +704,6 @@ Stardust.post("/shop/getItemGodList", errorhandler(async (req, res) => {
 
 Stardust.all("*", async (req, res) => {
 	console.log("Request on URL " + req.url);
-	if (req.get('content-type') == "application/json") {
-		const RequestData = DecryptData(req.body);
-		const RequestJSON = RequestData[1];
-		console.log(RequestData[0].toString('hex'), RequestData[2].toString('hex'));
-		console.log(RequestJSON);
-	}
 	res.status(500);
 	res.end();
 });
