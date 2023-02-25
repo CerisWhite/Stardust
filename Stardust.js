@@ -401,7 +401,7 @@ Stardust.post("/loginbonus/getLoginBonus", errorhandler(async (req, res) => {
 }));
 
 Stardust.post("/flag/getFlagListAll", errorhandler(async (req, res) => {
-	cconst ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"flagList": StaticData.FlagList
 	}
 	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
