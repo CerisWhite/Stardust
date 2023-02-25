@@ -311,7 +311,11 @@ Stardust.post("/player/getMyPlayerData", errorhandler(async (req, res) => {
 	res.set(ResHeaders()); res.write(Serialized); res.end();
 }));
 Stardust.post("/player/getPlayerRuneListBinary", errorhandler(async (req, res) => {
-	const ResponseData = fs.readFileSync('./static/RuneListBinary.bin').toString('hex');
+	let ResponseData = Buffer.from(fs.readFileSync('./static/RuneListBinary.bin'));
+	const SystemCodeOffset = ResponseData.readUInt32LE(4);
+	const TimeNow = Math.floor(Date.now());
+	ResponseData.writeBigUInt64LE(BigInt(TimeNow), SystemCodeOffset + 20);
+	
 	const EnCipher = crypto.createCipheriv('aes-128-cbc', res.locals.RequestKey, res.locals.RequestIV);
 	let EncData = EnCipher.update(ResponseData, 'hex', 'base64');
 	EncData += EnCipher.final('base64');
@@ -319,7 +323,11 @@ Stardust.post("/player/getPlayerRuneListBinary", errorhandler(async (req, res) =
 	res.write(EncData); res.end();
 }));
 Stardust.post("/player/getPlayerItemListBinary", errorhandler(async (req, res) => {
-	const ResponseData = fs.readFileSync('./static/ItemListBinary.bin').toString('hex');
+	let ResponseData = Buffer.from(fs.readFileSync('./static/ItemListBinary.bin'));
+	const SystemCodeOffset = ResponseData.readUInt32LE(4);
+	const TimeNow = Math.floor(Date.now());
+	ResponseData.writeBigUInt64LE(BigInt(TimeNow), SystemCodeOffset + 20);
+	
 	const EnCipher = crypto.createCipheriv('aes-128-cbc', res.locals.RequestKey, res.locals.RequestIV);
 	let EncData = EnCipher.update(ResponseData, 'hex', 'base64');
 	EncData += EnCipher.final('base64');
@@ -372,6 +380,14 @@ Stardust.post("/player/getPlayerMyHouse", errorhandler(async (req, res) => {
 Stardust.get("/player/downloadAvatarIcon", errorhandler(async (req, res) => {
 	const TargetID = req.param.targetPlayerId;
 	const Serialized = fs.readFileSync('./static/PlayerAvatarIcon.jpg');
+	res.set(ResHeaders()); res.write(Serialized); res.end();
+}));
+
+Stardust.post("/warehouse/getWarehouseList", errorhandler(async (req, res) => {
+	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
+		"warehouseList": []
+	}
+	const Serialized = EncryptData(res.locals.RequestIV, JSON.stringify(ResponseData), res.locals.RequestKey);
 	res.set(ResHeaders()); res.write(Serialized); res.end();
 }));
 
