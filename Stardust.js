@@ -1,12 +1,13 @@
-var express = require('express');
-var errorhandler = require('express-async-handler');
-var bodyParser = require('body-parser');
-var compression = require('compression')
-var crypto = require('crypto');
-var fs = require('fs-extra');
-var https = require('https');
+const express = require('express');
+const errorhandler = require('express-async-handler');
+const bodyParser = require('body-parser');
+const compression = require('compression')
+const crypto = require('crypto');
+const fs = require('fs-extra');
+const https = require('https');
 
-var StaticData = require('./library/function/StaticData.js');
+const StaticData = require('./library/function/StaticData.js');
+const ItemMap = JSON.parse(fs.readFileSync('./library/map/ItemMap.json'));
 
 let IndexPage = fs.readFileSync('./static/index.html');
 
@@ -55,11 +56,12 @@ function WriteUserData(PlayerID, Data) {
 }
 function RecordManager (req, res, next) {
 	if ((req.get('user-agent').includes("Fantasy%20Life") && req.get('content-type') == "application/json")
-		|| (req.get('user-agent').includes("Dalvik") && req.get('content-type') == "application/json")) { 
+		|| (req.get('user-agent').includes("Dalvik") && req.get('content-type') == "application/json")) {
 		const DecryptedData = DecryptData(req.body);
 		res.locals.RequestIV = DecryptedData[0];
 		res.locals.RequestJSON = DecryptedData[1];
 		res.locals.RequestKey = DecryptedData[2];
+		console.log("Incoming Request with key " + DecryptedData[2].toString('hex') + " and IV " + DecryptedData[0].toString('hex') + " on URL " + req.url);
 		if (res.locals.RequestJSON['playerId'] != undefined) {
 			res.locals.UserData = ReadUserData(res.locals.RequestJSON['playerId']);
 		}
@@ -76,6 +78,7 @@ function RecordManager (req, res, next) {
 			"serverDt": Math.floor(Date.now())
 		}
 	}
+	else { console.log("Request on " + req.url); }
 	next();
 }
 
@@ -116,7 +119,6 @@ Stardust.post("/start/start", errorhandler(async (req, res) => {
 	const ResponseData = { "resultCodeStatus": res.locals.ResultStatus, "systemStatus": res.locals.SystemStatus,
 		"statusMap": OSType,
 		"bgmDataVersion": 106,
-		
 		"voiceDataVersion": 102,
 		"l5idUrl": {
 			"web": "",
@@ -323,14 +325,120 @@ Stardust.post("/player/getPlayerRuneListBinary", errorhandler(async (req, res) =
 	res.write(EncData); res.end();
 }));
 Stardust.post("/player/getPlayerItemListBinary", errorhandler(async (req, res) => {
-	let ResponseData = Buffer.from(fs.readFileSync('./static/ItemListBinary.bin'));
-	const SystemCodeOffset = ResponseData.readUInt32LE(4);
+	const UserItemList = JSON.parse(fs.readFileSync('./static/UserItemList.json')); // Temporary
+	// Result Code
+	let ResultCode = Buffer.alloc(22);
+	ResultCode.writeUInt32LE(0, 0);
+	ResultCode.writeUInt32LE(500633936, 4);
+	ResultCode.writeInt32LE(0, 8);
+	const Behavior = "Ignore";
+	ResultCode.writeInt32LE(Behavior.length, 12);
+	ResultCode.write(Behavior, 16);
+	// System Status
+	let SystemStatus = Buffer.alloc(28);
+	SystemStatus.writeInt32LE(0, 0);
+	SystemStatus.writeInt32LE(0, 4);
+	SystemStatus.writeInt32LE(0, 8);
+	SystemStatus.writeInt32LE(0, 12);
+	SystemStatus.writeInt32LE(557, 16);
 	const TimeNow = Math.floor(Date.now());
-	ResponseData.writeBigUInt64LE(BigInt(TimeNow), SystemCodeOffset + 20);
+	SystemStatus.writeBigUInt64LE(BigInt(TimeNow), 20);
+	// Binary Data Header
+	let BinaryData = Buffer.alloc(8);
+	BinaryData.writeUInt32LE(2361063619, 0); // Unknown
+	BinaryData.writeUInt32LE(UserItemList.length, 4);
+	// Actual Item List
+	let Offset = 8;
+	for (let entry in UserItemList) {
+		const ItemIndex = ItemMap.findIndex(x => x.objectid == UserItemList[entry]['ItemID']);
+		const ItemType = ItemMap[ItemIndex]['objecttype'];
+		if (ItemType == 3427931189) {
+			NextBuffer = Buffer.alloc(56);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemID'], 0);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemSeq'], 4);
+			NextBuffer.writeUInt16LE(UserItemList[entry]['Quality'], 8);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ColorID'], 10);
+			NextBuffer.write(UserItemList[entry]['Creator'], 14);
+			NextBuffer.writeBigUInt64LE(BigInt(UserItemList[entry]['Timestamp']), 48);
+			BinaryData = Buffer.concat([BinaryData, NextBuffer]);
+		}
+		else if (ItemType == 3471139332 || ItemType == 1417282018 || ItemType == 4032200843 ||
+				 ItemType == 1821374411 || ItemType == 1997612469 || ItemType == 1246892041 || ItemType == 2804698770) {
+			NextBuffer = Buffer.alloc(14);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemID'], 0);
+			NextBuffer.writeUInt16LE(UserItemList[entry]['ItemCount'], 4);
+			NextBuffer.writeBigUInt64LE(BigInt(UserItemList[entry]['Timestamp']), 6);
+			BinaryData = Buffer.concat([BinaryData, NextBuffer]);
+		}
+		else if (ItemType == 4019880336 || ItemType == 3188418170 || ItemType == 3588665660) {
+			NextBuffer = Buffer.alloc(108);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemID'], 0);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemSeq'], 4);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemEXP'], 8);
+			NextBuffer.writeUInt16LE(UserItemList[entry]['Awakened'], 12);
+			NextBuffer.writeUInt16LE(UserItemList[entry]['Quality'], 14);
+			NextBuffer.writeUInt16LE(UserItemList[entry]['Evolved'], 16);
+			NextBuffer.writeUInt16LE(UserItemList[entry]['Aura'], 18);
+			NextBuffer.writeUInt16LE(UserItemList[entry]['Skin'], 20);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['Hidden'], 22);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ColorID'], 26);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['Efficacy'][0], 30);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['Efficacy'][1], 34);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['Efficacy'][2], 38);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['Attribute'], 42);
+			NextBuffer.write(UserItemList[entry]['Creator'], 46);
+			NextBuffer.writeBigUInt64LE(BigInt(UserItemList[entry]['Timestamp']), 80);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['EquippedRunes'][0], 88);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['EquippedRunes'][1], 92);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['EquippedRunes'][2], 96);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['EquippedRunes'][3], 100);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['EquippedRunes'][4], 104);
+			BinaryData = Buffer.concat([BinaryData, NextBuffer]);
+		}
+		else if (ItemType == 3893720726 || ItemType == 3417524377 || ItemType == 882577667) {
+			NextBuffer = Buffer.alloc(22);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemID'], 0);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemSeq'], 4);
+			NextBuffer.writeUInt16LE(UserItemList[entry]['Level'], 8);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ColorID'], 10);
+			NextBuffer.writeBigUInt64LE(BigInt(UserItemList[entry]['Timestamp']), 14);
+			BinaryData = Buffer.concat([BinaryData, NextBuffer]);
+		}
+		else if (ItemType == 3534754538) {
+			NextBuffer = Buffer.alloc(16);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemID'], 0);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemSeq'], 4);
+			NextBuffer.writeBigUInt64LE(BigInt(UserItemList[entry]['Timestamp']), 8);
+			BinaryData = Buffer.concat([BinaryData, NextBuffer]);
+		}
+		else if (ItemType == 1121324113) {
+			NextBuffer = Buffer.alloc(12);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemID'], 0);
+			NextBuffer.writeBigUInt64LE(BigInt(UserItemList[entry]['Timestamp']), 4);
+			BinaryData = Buffer.concat([BinaryData, NextBuffer]);
+		}
+		else if (ItemType == 296109364) {
+			NextBuffer = Buffer.alloc(28);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemID'], 0);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['Efficacy'][0], 4);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['Efficacy'][1], 8);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['Efficacy'][2], 12);
+			NextBuffer.writeUInt32LE(UserItemList[entry]['ItemSeq'], 16);
+			NextBuffer.writeBigUInt64LE(BigInt(UserItemList[entry]['Timestamp']), 20);
+			BinaryData = Buffer.concat([BinaryData, NextBuffer]);
+		}
+	}
+	// Header
+	let HeaderBinary = Buffer.alloc(12);
+	HeaderBinary.writeUInt32LE(12, 0);
+	HeaderBinary.writeUInt32LE(12 + ResultCode.length, 4);
+	HeaderBinary.writeUInt32LE(12 + ResultCode.length + SystemStatus.length, 8);
+	
+	const ResponseBinary = Buffer.concat([HeaderBinary, ResultCode, SystemStatus, BinaryData]);
 	
 	const EnCipher = crypto.createCipheriv('aes-128-cbc', res.locals.RequestKey, res.locals.RequestIV);
-	let EncData = EnCipher.update(ResponseData, 'hex', 'base64');
-	EncData += EnCipher.final('base64');
+	let EncData = Buffer.concat([EnCipher.update(ResponseBinary), EnCipher.final()]).toString('base64');
+	
 	res.set(ResHeaders());
 	res.write(EncData); res.end();
 }));
